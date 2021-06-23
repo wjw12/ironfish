@@ -18,6 +18,6 @@
     "prettier": "2.1.2"
   },
   "resolutions": {
-    "object-path": "^0.11.4"
+    "object-path": "0.11.5"
   }
 }

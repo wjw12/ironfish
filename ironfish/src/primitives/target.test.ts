@@ -4,6 +4,12 @@
 
 import { bigIntToBytes, bytesToBigInt, Target, TargetSerde } from './target'
 
+/**
+ * The logic of method calculation the increase/descreas difficulty
+ * if block was mined less than 40 seconds -> increase difficulty (the block has been found too fast)
+ * if block was mined between 40 and 80 seconds -> do nothing (averagate block mining time will be -->> 60 seconds)
+ * if block was mined more than 80+ seconds -> decrease difficulty
+ */
 describe('Target', () => {
   it('converts bigints to bytes and back', () => {
     const bigints = [
@@ -115,7 +121,7 @@ describe('TargetSerde', () => {
 })
 
 describe('Calculate target', () => {
-  const defaultBlockTimeInMs = 60000
+  const defaultBlockTimeInMs = 40000
   it('can increase target (which decreases difficulty) if its taking too long to mine a block (20+ seconds since last block)', () => {
     const now = new Date()
     // for any time 80 - 90 seconds after the last block, difficulty should decrease by previous block's difficulty / BigInt(2048)

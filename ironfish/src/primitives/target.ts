@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import type { Serde } from '../serde'
-import { TARGET_BLOCK_DO_NOTHING_RANGE_TIME_SECONDS } from '../consensus'
+import { TARGET_BLOCK_TIME_MS } from '..'
 
 function max(a: bigint, b: bigint): bigint {
   if (a > b) {
@@ -166,6 +166,7 @@ export class Target {
       time,
       previousBlockTimestamp,
       parentDifficulty,
+      TARGET_BLOCK_TIME_MS,
     )
 
     return Target.fromDifficulty(difficulty)
@@ -187,6 +188,7 @@ export class Target {
     time: Date,
     previousBlockTimestamp: Date,
     previousBlockDifficulty: bigint,
+    targetBlockTimeMS: number,
   ): bigint {
     // We are taking in large part Ethereum's dynamic difficulty calculation,
     // with the exeption of 'uncles' and 'difficulty bomb' as a concept
@@ -201,14 +203,9 @@ export class Target {
     // note that timestamps above are in seconds, and JS timestamps are in ms
 
     // max(1 - (current_block_timestamp - parent_timestamp) / 10, -99)
+    const targetBlockTimeInSeconds = (TARGET_BLOCK_TIME_MS * 2) / 3 / 1000
     const diffInSeconds = (time.getTime() - previousBlockTimestamp.getTime()) / 1000
-    // The logic of this line of code calculation the increase/descreas difficulty
-    // if block was mined less than 40 seconds -> increase difficulty (the block has been found too fast)
-    // if block was mined between 40 and 80 seconds -> do nothing (averagate block mining time will be -->> 60 seconds)
-    // if block was mined more than 80+ seconds -> decrease difficulty
-    const sign = BigInt(
-      Math.max(1 - Math.floor(diffInSeconds / TARGET_BLOCK_DO_NOTHING_RANGE_TIME_SECONDS), -99),
-    )
+    const sign = BigInt(Math.max(1 - Math.floor(diffInSeconds / targetBlockTimeInSeconds), -99))
     const offset = BigInt(previousBlockDifficulty) / BigInt(DIFFICULTY_ADJUSTMENT_DENOMINATOR)
 
     // diff = parent_diff + parent_diff / 2048 * max(1 - (current_block_timestamp - parent_timestamp) / 10, -99)

@@ -261,7 +261,7 @@ export class Blockchain {
       new Target('883423532389192164791648750371459257913741948437809479060803100646309888'),
       0,
       new Date(1624308639318),
-      BigInt(0),
+      0,
       Buffer.from('67656E6573697300000000000000000000000000000000000000000000000000', 'hex'),
       BigInt(0),
       Buffer.from('8362F37E70789DBB0B617F4256B3792E3239606D2F715C294D339649F2F56567', 'hex'),
@@ -920,7 +920,7 @@ export class Blockchain {
         target,
         0,
         timestamp,
-        await minersFee.fee(),
+        Number(await minersFee.fee()),
         graffiti,
       )
 

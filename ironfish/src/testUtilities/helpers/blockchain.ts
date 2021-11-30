@@ -19,9 +19,9 @@ export async function makeBlockAfter(
   }
 
   const sequence = after.sequence + 1
-  const miningReward = BigInt(chain.strategy.miningReward(sequence))
+  const miningReward = chain.strategy.miningReward(sequence)
 
-  if (miningReward !== BigInt(0)) {
+  if (miningReward !== Number(0)) {
     throw new Error(`Must have mining reward disabled but was ${miningReward}`)
   }
 

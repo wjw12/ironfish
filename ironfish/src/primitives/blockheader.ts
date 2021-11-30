@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import bufio from 'bufio'
-import { BlockHashSerdeInstance, GraffitiSerdeInstance, Serde } from '../serde'
+import { Serde } from '../serde'
 import { Strategy } from '../strategy'
 import { NoteEncryptedHash, SerializedNoteEncryptedHash } from './noteEncrypted'
 import { NullifierHash } from './nullifier'
@@ -14,6 +14,7 @@ export type BlockHash = Buffer
 import { createHash } from 'blake3-wasm'
 import { BigIntUtils } from '..'
 import PartialBlockHeaderSerde from '../serde/PartialHeaderSerde'
+import { head } from 'lodash'
 
 export function hashBlockHeader(serializedHeader: Buffer): BlockHash {
   const hash = createHash()
@@ -106,7 +107,7 @@ export class BlockHeader {
    * Note that the transaction fee on a minersFee is negative. By "spending a negative value"
    * the miner is awarding itself a positive receipt.
    */
-  public minersFee: bigint
+  public minersFee: number
 
   /**
    * A 32 byte field that may be assigned at will by the miner who mined the block.
@@ -130,7 +131,7 @@ export class BlockHeader {
     target: Target,
     randomness = 0,
     timestamp: Date | undefined = undefined,
-    minersFee: bigint,
+    minersFee: number,
     graffiti: Buffer,
     work = BigInt(0),
     hash?: Buffer,
@@ -250,7 +251,11 @@ export class BlockHeaderSerde implements Serde<BlockHeader, Buffer> {
     bw.writeBytes(BigIntUtils.toBytesBE(header.target.asBigInt(), 32))
     bw.writeU64(header.randomness)
     bw.writeU64(header.timestamp.getTime())
-    bw.writeBytes(BigIntUtils.toBytesBE(BigInt.asIntN(64,header.minersFee), 32))
+    if( header.minersFee > 1000) {
+      bw.writeU64(header.minersFee)
+    } else {
+      bw.writeU64(header.minersFee)
+    }
     bw.writeVarBytes(header.graffiti)
     bw.writeVarBytes(BigIntUtils.toBytes(header.work))
     bw.writeHash(header.hash)
@@ -270,7 +275,10 @@ export class BlockHeaderSerde implements Serde<BlockHeader, Buffer> {
     const target = br.readBytes(32)
     const randomness = br.readU64()
     const timestamp = br.readU64()
-    const minersFee = br.readBytes(32)
+    const minersFee = br.readU64()
+    if(minersFee > 100) {
+      console.log(minersFee)
+    }
     const graffiti = br.readVarBytes()
     const work = br.readVarBytes()
     const hash = br.readHash()
@@ -289,7 +297,7 @@ export class BlockHeaderSerde implements Serde<BlockHeader, Buffer> {
       new Target(target),
       randomness,
       new Date(timestamp),
-      BigIntUtils.fromBytes(minersFee),
+      minersFee,
       graffiti,
       BigIntUtils.fromBytes(work),
       hash,

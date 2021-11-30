@@ -20,7 +20,7 @@ export default class PartialBlockHeaderSerde implements Serde<PartialBlockHeader
     bw.writeU64(header.nullifierCommitment.size)
     bw.writeBytes(BigIntUtils.toBytesBE(header.target.asBigInt(), 32))
     bw.writeU64(header.timestamp.getTime())
-    bw.writeBytes(BigIntUtils.toBytesBE(header.minersFee, 8))
+    bw.writeU64(header.minersFee)
     bw.writeBytes(header.graffiti)
     return bw.render()
   }
@@ -35,7 +35,7 @@ export default class PartialBlockHeaderSerde implements Serde<PartialBlockHeader
     const nullifierCommitmentSize = br.readU64()
     const target = br.readBytes(32)
     const timestamp = br.readU64()
-    const minersFee = br.readBytes(8)
+    const minersFee = br.readU64()
     const graffiti = br.readBytes(32)
 
     return {
@@ -43,7 +43,7 @@ export default class PartialBlockHeaderSerde implements Serde<PartialBlockHeader
       previousBlockHash: previousBlockHash,
       target: new Target(target),
       timestamp: new Date(timestamp),
-      minersFee: BigIntUtils.fromBytes(minersFee),
+      minersFee: minersFee,
       graffiti: graffiti,
       noteCommitment: {
         commitment: noteCommitment,
@@ -74,6 +74,6 @@ type PartialBlockHeader = {
   }
   target: Target
   timestamp: Date
-  minersFee: bigint
+  minersFee: number
   graffiti: Buffer
 }

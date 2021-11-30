@@ -10,7 +10,7 @@ import { Target } from './target'
 describe('BlockHeaderSerde', () => {
   const nodeTest = createNodeTest()
 
-  xit('checks equal block headers', () => {
+  it('checks equal block headers', () => {
     const { strategy } = nodeTest
     const serde = strategy.blockHeaderSerde
 
@@ -23,7 +23,7 @@ describe('BlockHeaderSerde', () => {
       new Target(17),
       25,
       new Date(1598467858637),
-      BigInt(0),
+      0,
       Buffer.alloc(32),
     )
 
@@ -36,7 +36,7 @@ describe('BlockHeaderSerde', () => {
       new Target(17),
       25,
       new Date(1598467858637),
-      BigInt(0),
+      0,
       Buffer.alloc(32),
     )
 
@@ -110,7 +110,7 @@ describe('BlockHeaderSerde', () => {
       new Target(17),
       25,
       new Date(1598467858637),
-      BigInt(-1),
+      -1,
       GraffitiUtils.fromString('test'),
     )
 

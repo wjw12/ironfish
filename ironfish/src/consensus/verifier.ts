@@ -91,17 +91,17 @@ export class Verifier {
     }
 
     // Sum the totalTransactionFees and minersFee
-    let totalTransactionFees = BigInt(0)
-    let minersFee = BigInt(0)
+    let totalTransactionFees = Number(0)
+    let minersFee = Number(0)
 
     const transactionFees = await Promise.all(block.transactions.map((t) => t.fee()))
 
     for (const transactionFee of transactionFees) {
       if (transactionFee > 0) {
-        totalTransactionFees += transactionFee
+        totalTransactionFees += Number(transactionFee)
       }
       if (transactionFee < 0) {
-        minersFee += transactionFee
+        minersFee += Number(transactionFee)
       }
     }
 
@@ -112,7 +112,7 @@ export class Verifier {
     }
 
     const miningReward = block.header.strategy.miningReward(block.header.sequence)
-    if (minersFee !== BigInt(-1) * (BigInt(miningReward) + totalTransactionFees)) {
+    if (minersFee !== -1 * (miningReward + totalTransactionFees)) {
       return { valid: false, reason: VerificationResultReason.INVALID_MINERS_FEE }
     }
 

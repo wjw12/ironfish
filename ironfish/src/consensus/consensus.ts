@@ -26,11 +26,6 @@ export const ALLOWED_BLOCK_FUTURE_SECONDS = 15
 export const GENESIS_SUPPLY_IN_IRON = 42000000
 
 /**
- * The oldest the tip should be before we consider the chain synced
- */
-export const MAX_SYNCED_AGE_MS = 60 * 1000
-
-/**
  * The maximum allowed requested blocks by the network
  */
 export const MAX_REQUESTED_BLOCKS = 50
@@ -53,3 +48,8 @@ export const TARGET_BUCKET_TIME_IN_SECONDS = 10
  * It's used in calculating how much a miner should get in rewards.
  */
 export const IRON_FISH_YEAR_IN_BLOCKS = (365 * 24 * 60 * 60) / TARGET_BLOCK_TIME_IN_SECONDS
+
+/**
+ * The oldest the tip should be before we consider the chain synced
+ */
+ export const MAX_SYNCED_AGE_MS = TARGET_BLOCK_TIME_IN_SECONDS * 4 * 1000

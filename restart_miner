@@ -1,5 +1,6 @@
 #!/bin/bash
-. /home/matt/.nvm/nvm.sh
+source $HOME/.bashrc
+. $HOME/.nvm/nvm.sh
 s=$(ps aux | grep -e "node_modules/.bin/ironfish miners:start" | grep -v grep);a=($(echo "$s" | tr ' ' '\n'));
 kill -9 ${a[1]};
 cd $IRONFISH_ROOT

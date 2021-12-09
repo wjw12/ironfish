@@ -8,3 +8,6 @@ npm install --global yarn
 
 ufw allow 9033
 ufw allow 8001
+
+yarn
+yarn build

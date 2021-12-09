@@ -1,5 +1,5 @@
 while true
 do 
-    /home/matt/workspace/ironfish/restart_miner
+    $IRONFISH_ROOT/restart_miner
     sleep 3600
 done

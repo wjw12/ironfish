@@ -276,3 +276,29 @@ Added block seq: 14320, hash: 00000...0b75d, txs: 4, progress: 100.00%, time: 49
 Added block to fork seq: 14323, head-seq: 14323, hash: 00000...d6749, head-hash: 00000...ec148, work: 927176054825380, head-work: 927176054825380, work-diff: 0
 Added block seq: 14340, hash: 00000...25f7e, txs: 1, progress: 100.00%, time: 888.4ms
 Added block seq: 14360, hash: 00000...6ec50, txs: 2, progress: 100.00%, time: 4258.4ms
+Added block to fork seq: 14373, head-seq: 14373, hash: 00000...75772, head-hash: 00000...5cef6, work: 934943317586806, head-work: 934943317586806, work-diff: 0
+Added block seq: 14380, hash: 00000...a1412, txs: 1, progress: 100.00%, time: 112.8ms
+Added block to fork seq: 14389, head-seq: 14389, hash: 00000...2666a, head-hash: 00000...d2e6a, work: 937446109460001, head-work: 937446185945386, work-diff: 76485385
+Reorganizing chain from 00000...d2e6a (14389) for 00000...13dec (14389) on prev 00000...78dc0 (14388)
+Reorganized chain. blocks: 1, old: 00000...d2e6a (14389), new: 00000...78dc0 (14388), fork: 00000...78dc0 (14388)
+Added block seq: 14400, hash: 00000...86cde, txs: 1, progress: 100.00%, time: 55.8ms
+Reorganizing chain from 00000...719e9 (14413) for 00000...66f8c (14413) on prev 00000...e99ec (14412)
+Reorganized chain. blocks: 1, old: 00000...719e9 (14413), new: 00000...e99ec (14412), fork: 00000...e99ec (14412)
+Added block seq: 14420, hash: 00000...1f8a9, txs: 2, progress: 100.00%, time: 3255.4ms
+Added block seq: 14440, hash: 00000...15170, txs: 1, progress: 100.00%, time: 72.6ms
+Reorganizing chain from 00000...e62f0 (14446) for 00000...06838 (14446) on prev 00000...33019 (14445)
+Reorganized chain. blocks: 1, old: 00000...e62f0 (14446), new: 00000...33019 (14445), fork: 00000...33019 (14445)
+Reorganizing chain from 00000...14972 (14457) for 00000...1d230 (14457) on prev 00000...e3911 (14456)
+Reorganized chain. blocks: 1, old: 00000...14972 (14457), new: 00000...e3911 (14456), fork: 00000...e3911 (14456)
+Added block seq: 14460, hash: 00000...54534, txs: 1, progress: 100.00%, time: 55.2ms
+Added block to fork seq: 14476, head-seq: 14476, hash: 00000...0a09f, head-hash: 00000...d55b8, work: 951090710642772, head-work: 951090789306855, work-diff: 78664083
+Added block seq: 14480, hash: 00000...30cf1, txs: 2, progress: 100.00%, time: 5091.8ms
+Added block seq: 14500, hash: 00000...6c15f, txs: 1, progress: 100.00%, time: 49.4ms
+Reorganizing chain from 00000...9334c (14510) for 00000...82835 (14510) on prev 00000...a6354 (14509)
+Reorganized chain. blocks: 1, old: 00000...9334c (14510), new: 00000...a6354 (14509), fork: 00000...a6354 (14509)
+Added block seq: 14520, hash: 00000...203ff, txs: 1, progress: 100.00%, time: 55.7ms
+Added block seq: 14540, hash: 00000...568f9, txs: 1, progress: 100.00%, time: 150.6ms
+Added block seq: 14560, hash: 00000...cf840, txs: 1, progress: 100.00%, time: 67.4ms
+Added block seq: 14580, hash: 00000...fffd6, txs: 1, progress: 100.00%, time: 132.7ms
+Added block seq: 14600, hash: 00000...04bac, txs: 1, progress: 100.00%, time: 210.4ms
+Added block seq: 14620, hash: 00000...438a2, txs: 1, progress: 100.00%, time: 78.4ms

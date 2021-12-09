@@ -2,6 +2,6 @@
 . /home/matt/.nvm/nvm.sh
 s=$(ps aux | grep -e "node_modules/.bin/ironfish miners:start" | grep -v grep);a=($(echo "$s" | tr ' ' '\n'));
 kill -9 ${a[1]};
-cd /home/matt/workspace/ironfish
+cd $IRONFISH_ROOT
 nvm use 16
 npm run start_miner

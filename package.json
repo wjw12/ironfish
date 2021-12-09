@@ -15,9 +15,9 @@
     "ironfish-rust-wasm/web"
   ],
   "scripts": {
-    "start_miner": "/home/matt/workspace/ironfish/node_modules/.bin/ironfish miners:start -t 12 >$HOME/workspace/ironfish/miner.out 2>&1 &",
-    "start_node": "/home/matt/workspace/ironfish/node_modules/.bin/ironfish start >$HOME/workspace/ironfish/node.out 2>&1 &",
-    "keepmining": "/home/matt/workspace/ironfish/keepmining >/dev/null 2>&1 &",
+    "start_miner": "$IRONFISH_ROOT/node_modules/.bin/ironfish miners:start -t 12 --rpc.tcp --rpc.tcp.host=localhost --rpc.tcp.port=8001 >$IRONFISH_ROOT/miner.out 2>&1 &",
+    "start_node": "$IRONFISH_ROOT/node_modules/.bin/ironfish start --rpc.tcp --rpc.tcp.host=0.0.0.0 --rpc.tcp.port=8001 >$IRONFISH_ROOT/node.out 2>&1 &",
+    "keepmining": "$IRONFISH_ROOT/keepmining >/dev/null 2>&1 &",
     "build": "lerna run build",
     "build:changed": "lerna run --since origin/master --include-dependents build",
     "build:docs": "lerna run build:docs",

@@ -1,0 +1,5 @@
+while true
+do 
+    $IRONFISH_ROOT/restart_node
+    sleep 5000
+done

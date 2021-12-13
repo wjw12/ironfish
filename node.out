@@ -13,7 +13,7 @@
 ::::::::::::       :::::::::::::::::::        
 ::::::::::           ::::::::::::::::         
 
-Version       0.1.8 @ src
+Version       0.1.10 @ src
 Node Name     NONE
 Peer Identity 5fSWY0WWJkI1ZJbXOhRNHcnY5fuAUob1tWlvj0gHtBQ=
 Peer Agent    if/cli/src
@@ -22,13 +22,13 @@ Bootstrap     test.bn1.ironfish.network
  
 WebSocket server started at :::9033
 Connected to the Iron Fish network
-Starting sync from GzMGFn5 (sobolkzn). work: +193063513744, ours: 14882, theirs: 14883
-Finding ancestor using linear search on last 3 blocks starting at 00000...2be53 (14882) from peer GzMGFn5 (sobolkzn) at 14883
-Found peer GzMGFn5 (sobolkzn) ancestor 00000...2be53, syncing from 14882 -> 14883 (1) after 1 requests
-Requesting 20 blocks starting at 00000...2be53 (14882) from GzMGFn5 (sobolkzn)
-Finished syncing 1 blocks from GzMGFn5 (sobolkzn)
-Added block seq: 14900, hash: 00000...3b916, txs: 1, progress: 100.00%, time: 24.2ms
-Added block seq: 14920, hash: 00000...9e1c5, txs: 1, progress: 100.00%, time: 25.9ms
-Reorganizing chain from 00000...b4120 (14933) for 00000...25556 (14933) on prev 00000...f1888 (14932)
-Reorganized chain. blocks: 1, old: 00000...b4120 (14933), new: 00000...f1888 (14932), fork: 00000...f1888 (14932)
-Added block seq: 14940, hash: 00000...45f10, txs: 1, progress: 100.00%, time: 28.6ms
+Peer ONHm80D (zashevelilos) sent an invalid block. score: 10, hash: 00000...2efef (
+          19286
+        ), reason: Invalid spend
+Peer ONHm80D (zashevelilos) has been banned: Invalid spend
+Peer Yn/Eh5+ (zashevelilos) sent orphan 00000...ee9a8 (19287), syncing orphan chain.
+Starting sync from Yn/Eh5+ (zashevelilos). work: +11854234972, ours: 19285, theirs: 19286
+Finding ancestor using linear search on last 3 blocks starting at 00000...16e4c (19285) from peer Yn/Eh5+ (zashevelilos) at 19286
+Found peer Yn/Eh5+ (zashevelilos) ancestor 00000...16e4c, syncing from 19285 -> 19287 (2) after 1 requests
+Requesting 20 blocks starting at 00000...16e4c (19285) from Yn/Eh5+ (zashevelilos)
+Finished syncing 2 blocks from Yn/Eh5+ (zashevelilos)

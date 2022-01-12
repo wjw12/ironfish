@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import * as yup from 'yup'
+import { GENESIS_BLOCK_SEQUENCE } from '../../../consensus'
 import { BlockHeader } from '../../../primitives'
 import { ValidationError } from '../../adapters'
 import { ApiNamespace, router } from '../router'
@@ -15,6 +16,7 @@ export type GetBlockInfoRequest = {
 export type GetBlockInfoResponse = {
   block: {
     graffiti: string
+    difficulty: string
     hash: string
     previousBlockHash: string
     sequence: number
@@ -46,6 +48,7 @@ export const GetBlockInfoResponseSchema: yup.ObjectSchema<GetBlockInfoResponse> 
     block: yup
       .object({
         graffiti: yup.string().defined(),
+        difficulty: yup.string().defined(),
         hash: yup.string().defined(),
         previousBlockHash: yup.string().defined(),
         sequence: yup.number().defined(),
@@ -91,6 +94,14 @@ router.register<typeof GetBlockInfoRequestSchema, GetBlockInfoResponse>(
       }
     }
 
+    // Use negative numbers to start from the head of the chain
+    if (request.data.sequence && request.data.sequence < 0) {
+      request.data.sequence = Math.max(
+        node.chain.head.sequence + request.data.sequence + 1,
+        GENESIS_BLOCK_SEQUENCE,
+      )
+    }
+
     if (request.data.hash) {
       const hash = Buffer.from(request.data.hash, 'hex')
       header = await node.chain.getHeader(hash)
@@ -132,6 +143,7 @@ router.register<typeof GetBlockInfoRequestSchema, GetBlockInfoResponse>(
     request.status(200).end({
       block: {
         graffiti: header.graffiti.toString('hex'),
+        difficulty: header.target.toDifficulty().toString(),
         hash: header.hash.toString('hex'),
         previousBlockHash: header.previousBlockHash.toString('hex'),
         sequence: Number(header.sequence),

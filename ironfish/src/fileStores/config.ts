@@ -14,6 +14,8 @@ export const DEFAULT_GET_FUNDS_API = 'https://api.ironfish.network/faucet_transa
 export const DEFAULT_TELEMETRY_API = 'https://api.ironfish.network/api/v1/writeTelemetry'
 export const DEFAULT_BOOTSTRAP_NODE = 'test.bn1.ironfish.network'
 export const DEFAULT_DISCORD_INVITE = 'https://discord.gg/EkQkEcm8DH'
+export const DEFAULT_USE_RPC_IPC = true
+export const DEFAULT_USE_RPC_TCP = false
 
 export type ConfigOptions = {
   bootstrapNodes: string[]
@@ -83,6 +85,7 @@ export type ConfigOptions = {
   peerPort: number
   rpcTcpHost: string
   rpcTcpPort: number
+  rpcTcpSecure: boolean
   rpcRetryConnect: boolean
   /**
    * The maximum number of peers we can be connected to at a time. Past this number,
@@ -115,6 +118,11 @@ export type ConfigOptions = {
    * The default number of blocks to request per message when syncing.
    */
   blocksPerMessage: number
+
+  /**
+   * The number of hashes processed by miner per worker request.
+   */
+  minerBatchSize: number
 }
 
 export const ConfigOptionsSchema: yup.ObjectSchema<Partial<ConfigOptions>> = yup
@@ -151,8 +159,8 @@ export class Config extends KeyStore<ConfigOptions> {
       enableLogFile: false,
       enableMiningDirector: false,
       enableRpc: true,
-      enableRpcIpc: true,
-      enableRpcTcp: false,
+      enableRpcIpc: DEFAULT_USE_RPC_IPC,
+      enableRpcTcp: DEFAULT_USE_RPC_TCP,
       enableSyncing: true,
       enableTelemetry: false,
       enableMetrics: true,
@@ -170,6 +178,7 @@ export class Config extends KeyStore<ConfigOptions> {
       peerPort: DEFAULT_WEBSOCKET_PORT,
       rpcTcpHost: 'localhost',
       rpcTcpPort: 8020,
+      rpcTcpSecure: false,
       rpcRetryConnect: false,
       maxPeers: 50,
       minPeers: 1,
@@ -178,6 +187,7 @@ export class Config extends KeyStore<ConfigOptions> {
       accountName: DEFAULT_WALLET_NAME,
       generateNewIdentity: false,
       blocksPerMessage: 20,
+      minerBatchSize: 10000,
     }
   }
 }

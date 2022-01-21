@@ -6,7 +6,7 @@ import { Assert } from '../../../assert'
 import { ChainProcessor } from '../../../chainProcessor'
 import { Block, BlockHeader } from '../../../primitives'
 import { BlockHashSerdeInstance } from '../../../serde'
-import { GraffitiUtils } from '../../../utils/graffiti'
+import { GraffitiUtils, PromiseUtils } from '../../../utils'
 import { ApiNamespace, router } from '../router'
 
 export type FollowChainStreamRequest =
@@ -108,26 +108,27 @@ router.register<typeof FollowChainStreamRequestSchema, FollowChainStreamResponse
     const processor = new ChainProcessor({
       chain: node.chain,
       logger: node.logger,
-      name: 'FollowChain',
       head: head,
     })
 
     const send = async (block: Block, type: 'connected' | 'disconnected' | 'fork') => {
       const transactions = await Promise.all(
         block.transactions.map(async (transaction) => {
-          return {
-            hash: BlockHashSerdeInstance.serialize(transaction.hash()),
-            size: Buffer.from(
-              JSON.stringify(node.strategy.transactionSerde.serialize(transaction)),
-            ).byteLength,
-            fee: Number(await transaction.fee()),
-            notes: [...transaction.notes()].map((note) => ({
-              commitment: note.merkleHash().toString('hex'),
-            })),
-            spends: [...transaction.spends()].map((spend) => ({
-              nullifier: spend.nullifier.toString('hex'),
-            })),
-          }
+          return transaction.withReference(async () => {
+            return {
+              hash: BlockHashSerdeInstance.serialize(transaction.hash()),
+              size: Buffer.from(
+                JSON.stringify(node.strategy.transactionSerde.serialize(transaction)),
+              ).byteLength,
+              fee: Number(await transaction.fee()),
+              notes: [...transaction.notes()].map((note) => ({
+                commitment: note.merkleHash().toString('hex'),
+              })),
+              spends: [...transaction.spends()].map((spend) => ({
+                nullifier: spend.nullifier.toString('hex'),
+              })),
+            }
+          })
         }),
       )
 
@@ -180,6 +181,7 @@ router.register<typeof FollowChainStreamRequestSchema, FollowChainStreamResponse
 
     while (!request.closed) {
       await processor.update()
+      await PromiseUtils.sleep(1000)
     }
 
     request.end()

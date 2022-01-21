@@ -3,7 +3,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import * as yup from 'yup'
 import { IronfishNode } from '../../../node'
-import { Package } from '../../../package'
 import { MathUtils, PromiseUtils } from '../../../utils'
 import { ApiNamespace, router } from '../router'
 
@@ -18,6 +17,11 @@ export type GetStatusResponse = {
     status: 'started' | 'stopped' | 'error'
     version: string
     git: string
+  }
+  memory: {
+    heapTotal: number
+    heapUsed: number
+    rss: number
   }
   miningDirector: {
     status: 'started' | 'stopped'
@@ -69,6 +73,13 @@ export const GetStatusResponseSchema: yup.ObjectSchema<GetStatusResponse> = yup
         status: yup.string().oneOf(['started', 'stopped', 'error']).defined(),
         version: yup.string().defined(),
         git: yup.string().defined(),
+      })
+      .defined(),
+    memory: yup
+      .object({
+        heapTotal: yup.number().defined(),
+        heapUsed: yup.number().defined(),
+        rss: yup.number().defined(),
       })
       .defined(),
     miningDirector: yup
@@ -167,8 +178,13 @@ function getStatus(node: IronfishNode): GetStatusResponse {
     },
     node: {
       status: node.started ? 'started' : 'stopped',
-      version: Package.version,
-      git: Package.git,
+      version: node.pkg.version,
+      git: node.pkg.git,
+    },
+    memory: {
+      heapTotal: node.metrics.heapTotal.value,
+      heapUsed: node.metrics.heapUsed.value,
+      rss: node.metrics.rss.value,
     },
     miningDirector: {
       status: node.miningDirector.isStarted() ? 'started' : 'stopped',

@@ -1,6 +1,6 @@
 {
   "name": "ironfish-cli",
-  "version": "0.0.0",
+  "version": "0.1.20",
   "description": "Command line Iron Fish node",
   "author": "Iron Fish <contact@ironfish.network> (https://ironfish.network)",
   "engines": {
@@ -46,7 +46,7 @@
     "@oclif/config": "1.17.0",
     "@oclif/plugin-help": "3.2.2",
     "@oclif/plugin-not-found": "1.2.4",
-    "axios": "0.21.1",
+    "axios": "0.21.4",
     "blessed": "0.1.81",
     "cli-ux": "^5.5.0",
     "ironfish": "*",
@@ -61,9 +61,9 @@
     "macos": {
       "identifier": "network.ironfish.cli"
     },
-    "commands": "./build/commands",
+    "commands": "./build/src/commands",
     "hooks": {
-      "init": "./build/hooks/version"
+      "init": "./build/src/hooks/version"
     },
     "bin": "ironfish",
     "plugins": [
@@ -105,7 +105,7 @@
   "keywords": [
     "oclif"
   ],
-  "main": "build/index.js",
+  "main": "build/src/index.js",
   "repository": "iron-fish/ironfish",
-  "types": "build/index.d.ts"
+  "types": "build/src/index.d.ts"
 }

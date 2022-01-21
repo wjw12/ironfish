@@ -62,6 +62,9 @@ export default class Status extends IronfishCommand {
 
 function renderStatus(content: GetStatusResponse): string {
   const nodeStatus = `${content.node.status.toUpperCase()}`
+  const heapTotal = FileUtils.formatMemorySize(content.memory.heapTotal)
+  const heapUsed = FileUtils.formatMemorySize(content.memory.heapUsed)
+  const rss = FileUtils.formatMemorySize(content.memory.rss)
   let blockSyncerStatus = content.blockSyncer.status.toString().toUpperCase()
 
   Assert.isNotUndefined(content.blockSyncer.syncing)
@@ -102,6 +105,8 @@ function renderStatus(content: GetStatusResponse): string {
   return `
 Version              ${content.node.version} @ ${content.node.git}
 Node                 ${nodeStatus}
+Heap Used            ${heapUsed} / ${heapTotal}
+Memory               ${rss}
 P2P Network          ${peerNetworkStatus}
 Mining               ${miningDirectorStatus}
 Mem Pool             ${memPoolStatus}

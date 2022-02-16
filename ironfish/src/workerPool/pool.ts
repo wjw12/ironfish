@@ -7,6 +7,7 @@ import type {
   BoxMessageRequest,
   CreateMinersFeeRequest,
   CreateTransactionRequest,
+  GetUnspentNotesRequest,
   MineHeaderRequest,
   SleepRequest,
   TransactionFeeRequest,
@@ -19,8 +20,10 @@ import { Meter, MetricsMonitor } from '../metrics'
 import { Identity, PrivateIdentity } from '../network'
 import { Note } from '../primitives/note'
 import { Transaction } from '../primitives/transaction'
+import { Metric } from '../telemetry/interfaces/metric'
 import { Job } from './job'
 import { WorkerRequest } from './messages'
+import { SubmitTelemetryRequest } from './tasks/submitTelemetry'
 import { VerifyTransactionOptions } from './tasks/verifyTransaction'
 import { getWorkerPath, Worker } from './worker'
 
@@ -50,11 +53,13 @@ export class WorkerPool {
     ['verify', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['sleep', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['createTransaction', { complete: 0, error: 0, queue: 0, execute: 0 }],
+    ['getUnspentNotes', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['boxMessage', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['unboxMessage', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['mineHeader', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['transactionFee', { complete: 0, error: 0, queue: 0, execute: 0 }],
     ['jobAbort', { complete: 0, error: 0, queue: 0, execute: 0 }],
+    ['submitTelemetry', { complete: 0, error: 0, queue: 0, execute: 0 }],
   ])
 
   get saturated(): boolean {
@@ -279,6 +284,33 @@ export class WorkerPool {
     }
   }
 
+  async getUnspentNotes(
+    serializedTransactionPosted: Buffer,
+    accountIncomingViewKeys: Array<string>,
+  ): Promise<{
+    notes: ReadonlyArray<{
+      account: string
+      hash: string
+      note: Buffer
+    }>
+  }> {
+    const request: GetUnspentNotesRequest = {
+      type: 'getUnspentNotes',
+      serializedTransactionPosted,
+      accounts: accountIncomingViewKeys,
+    }
+
+    const response = await this.execute(request).result()
+
+    if (response === null || response.type !== request.type) {
+      throw new Error('Response type must match request type')
+    }
+
+    return {
+      notes: response.notes,
+    }
+  }
+
   /**
    * A test worker task that sleeps for specicifed milliseconds
    */
@@ -293,6 +325,15 @@ export class WorkerPool {
     job.enableJobAbortError = true
 
     return job
+  }
+
+  async submitTelemetry(points: Metric[]): Promise<void> {
+    const request: SubmitTelemetryRequest = {
+      type: 'submitTelemetry',
+      points,
+    }
+
+    await this.execute(request).result()
   }
 
   private execute(request: Readonly<WorkerRequest>): Job {

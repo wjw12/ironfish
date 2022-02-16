@@ -6,8 +6,10 @@ import { JobErrorSerialized } from './errors'
 import { BoxMessageRequest, BoxMessageResponse } from './tasks/boxMessage'
 import { CreateMinersFeeRequest, CreateMinersFeeResponse } from './tasks/createMinersFee'
 import { CreateTransactionRequest, CreateTransactionResponse } from './tasks/createTransaction'
+import { GetUnspentNotesRequest, GetUnspentNotesResponse } from './tasks/getUnspentNotes'
 import { MineHeaderRequest, MineHeaderResponse } from './tasks/mineHeader'
 import { SleepRequest, SleepResponse } from './tasks/sleep'
+import { SubmitTelemetryRequest, SubmitTelemetryResponse } from './tasks/submitTelemetry'
 import { TransactionFeeRequest, TransactionFeeResponse } from './tasks/transactionFee'
 import { UnboxMessageRequest, UnboxMessageResponse } from './tasks/unboxMessage'
 import { VerifyTransactionRequest, VerifyTransactionResponse } from './tasks/verifyTransaction'
@@ -37,23 +39,27 @@ export type WorkerResponseMessage = {
 }
 
 export type WorkerRequest =
+  | BoxMessageRequest
   | CreateMinersFeeRequest
   | CreateTransactionRequest
-  | TransactionFeeRequest
-  | VerifyTransactionRequest
-  | BoxMessageRequest
-  | UnboxMessageRequest
+  | GetUnspentNotesRequest
+  | JobAbortRequest
   | MineHeaderRequest
   | SleepRequest
-  | JobAbortRequest
+  | SubmitTelemetryRequest
+  | TransactionFeeRequest
+  | UnboxMessageRequest
+  | VerifyTransactionRequest
 
 export type WorkerResponse =
+  | BoxMessageResponse
   | CreateMinersFeeResponse
   | CreateTransactionResponse
-  | TransactionFeeResponse
-  | VerifyTransactionResponse
-  | BoxMessageResponse
-  | UnboxMessageResponse
+  | GetUnspentNotesResponse
+  | JobErrorResponse
   | MineHeaderResponse
   | SleepResponse
-  | JobErrorResponse
+  | SubmitTelemetryResponse
+  | TransactionFeeResponse
+  | UnboxMessageResponse
+  | VerifyTransactionResponse

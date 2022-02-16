@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { createRootLogger, Logger } from '../logger'
+import { Telemetry } from '../telemetry/telemetry'
 import { SetIntervalToken } from '../utils'
 import { Gauge } from './gauge'
 import { Meter } from './meter'
@@ -10,7 +11,8 @@ import { Meter } from './meter'
 export class MetricsMonitor {
   private _started = false
   private _meters: Meter[] = []
-  readonly logger: Logger
+  private readonly telemetry: Telemetry | null
+  private readonly logger: Logger
 
   readonly p2p_InboundTraffic: Meter
   readonly p2p_InboundTraffic_WS: Meter
@@ -24,10 +26,13 @@ export class MetricsMonitor {
   readonly heapUsed: Gauge
   readonly rss: Gauge
   private memoryInterval: SetIntervalToken | null
+  private memoryTelemetryInterval: SetIntervalToken | null
   private readonly memoryRefreshPeriodMs = 1000
+  private readonly memoryTelemetryPeriodMs = 15 * 1000
 
-  constructor(logger: Logger = createRootLogger()) {
-    this.logger = logger
+  constructor({ telemetry, logger }: { telemetry?: Telemetry; logger?: Logger }) {
+    this.telemetry = telemetry ?? null
+    this.logger = logger ?? createRootLogger()
 
     this.p2p_InboundTraffic = this.addMeter()
     this.p2p_InboundTraffic_WS = this.addMeter()
@@ -41,6 +46,7 @@ export class MetricsMonitor {
     this.heapUsed = new Gauge()
     this.rss = new Gauge()
     this.memoryInterval = null
+    this.memoryTelemetryInterval = null
   }
 
   get started(): boolean {
@@ -52,6 +58,12 @@ export class MetricsMonitor {
     this._meters.forEach((m) => m.start())
 
     this.memoryInterval = setInterval(() => this.refreshMemory(), this.memoryRefreshPeriodMs)
+    if (this.telemetry) {
+      this.memoryTelemetryInterval = setInterval(
+        () => this.submitMemoryTelemetry(),
+        this.memoryTelemetryPeriodMs,
+      )
+    }
   }
 
   stop(): void {
@@ -60,6 +72,10 @@ export class MetricsMonitor {
 
     if (this.memoryInterval) {
       clearTimeout(this.memoryInterval)
+    }
+
+    if (this.memoryTelemetryInterval) {
+      clearTimeout(this.memoryTelemetryInterval)
     }
   }
 
@@ -77,5 +93,11 @@ export class MetricsMonitor {
     this.heapTotal.value = memoryUsage.heapTotal
     this.heapUsed.value = memoryUsage.heapUsed
     this.rss.value = memoryUsage.rss
+  }
+
+  private submitMemoryTelemetry(): void {
+    if (this.telemetry) {
+      this.telemetry.submitMemoryUsage(this.heapUsed.value, this.heapTotal.value)
+    }
   }
 }

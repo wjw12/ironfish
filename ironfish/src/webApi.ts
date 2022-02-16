@@ -4,6 +4,7 @@
 
 import axios, { AxiosRequestConfig } from 'axios'
 import { FollowChainStreamResponse } from './rpc/routes/chain/followChain'
+import { Metric } from './telemetry'
 import { UnwrapPromise } from './utils/types'
 
 type FaucetTransaction = {
@@ -12,6 +13,14 @@ type FaucetTransaction = {
   public_key: string
   started_at: string | null
   completed_at: string | null
+}
+
+type ApiUser = {
+  id: number
+  country_code: string
+  graffiti: string
+  total_points: number
+  rank: number
 }
 
 /**
@@ -100,6 +109,13 @@ export class WebApi {
     return response.data.data
   }
 
+  async getUser(id: number): Promise<ApiUser | null> {
+    return await axios
+      .get<ApiUser>(`${this.host}/users/${id}`, this.options())
+      .then((r) => r.data)
+      .catch(() => null)
+  }
+
   async startFaucetTransaction(id: number): Promise<FaucetTransaction> {
     this.requireToken()
 
@@ -122,6 +138,10 @@ export class WebApi {
     )
 
     return response.data
+  }
+
+  async submitTelemetry(payload: { points: Metric[] }): Promise<void> {
+    await axios.post(`${this.host}/telemetry`, payload)
   }
 
   options(headers: Record<string, string> = {}): AxiosRequestConfig {
